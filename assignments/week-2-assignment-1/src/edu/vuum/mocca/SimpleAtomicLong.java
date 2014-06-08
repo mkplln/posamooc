@@ -44,15 +44,15 @@ class SimpleAtomicLong
         long value;
 
         // added for optimization purposes
-        final Lock r = mRWLock.readLock();
+        final Lock lock = mRWLock.readLock();
         
         // TODO -- you fill in here
-        r.lock();
+        lock.lock();
         try {
         	value = mValue;
         }
         finally {
-        	r.unlock();
+        	lock.unlock();
         }
 
         return value;
@@ -68,17 +68,17 @@ class SimpleAtomicLong
         long value = 0;
         
         // added for optimization purposes
-        final Lock w = mRWLock.writeLock();
+        final Lock lock = mRWLock.writeLock();
         
 
         // TODO -- you fill in here
-        w.lock();
+        lock.lock();
         try {
         	value = --mValue;
         	
         }
         finally {
-        	w.unlock();
+        	lock.unlock();
         }	
         
         return value;
@@ -93,16 +93,16 @@ class SimpleAtomicLong
     {
         long value = 0;
         
-        final Lock w = mRWLock.writeLock();
+        final Lock lock = mRWLock.writeLock();
 
         // TODO -- you fill in here
-        w.lock();
+        lock.lock();
         try {
         	value = mValue++;
         	
         }
         finally {
-        	w.unlock();
+        	lock.unlock();
         }	
 
         return value;
@@ -117,16 +117,16 @@ class SimpleAtomicLong
     {
         long value = 0;
         
-        final Lock w = mRWLock.writeLock();
+        final Lock lock = mRWLock.writeLock();
 
         // TODO -- you fill in here
-        w.lock();
+        lock.lock();
         try {
         	value = mValue--;
         	
         }
         finally {
-        	w.unlock();
+        	lock.unlock();
         }	
 
         return value;
@@ -141,16 +141,16 @@ class SimpleAtomicLong
     {
         long value = 0;
         
-        final Lock w = mRWLock.writeLock();
+        final Lock lock = mRWLock.writeLock();
         
         // TODO -- you fill in here
-        w.lock();
+        lock.lock();
         try {
         	value = ++mValue;
         	
         }
         finally {
-        	w.unlock();
+        	lock.unlock();
         }	
 
         return value;
