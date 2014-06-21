@@ -20,32 +20,32 @@ public class SimpleSemaphore {
      * Define a ReentrantLock to protect the critical section.
      */
     // TODO - you fill in here
-	private final ReentrantLock lock; 	
+	private final ReentrantLock mLock; 	
 
     /**
      * Define a Condition that waits while the number of permits is 0.
      */
     // TODO - you fill in here
-	private final Condition notLocked;
+	private final Condition mCond;
 
     /**
      * Define a count of the number of available permits.
      */
     // TODO - you fill in here.  Make sure that this data member will
     // ensure its values aren't cached by multiple Threads..
-	private volatile int count;
+	private volatile int mAvailablePermits;
 
-    public SimpleSemaphore(int permits, boolean fair) {
+    public SimpleSemaphore(int initialPermits, boolean fair) {
         // TODO - you fill in here to initialize the SimpleSemaphore,
         // making sure to allow both fair and non-fair Semaphore
         // semantics.
     	
     	// Initialize ReentrantLock with fairness
-    	this.lock = new ReentrantLock(fair);
+    	mLock = new ReentrantLock(fair);
     	
-    	this.notLocked = this.lock.newCondition();
+    	mCond = mLock.newCondition();
     	
-    	this.count = permits;
+    	mAvailablePermits = initialPermits;
     }
 
     /**
@@ -54,14 +54,14 @@ public class SimpleSemaphore {
      */
     public void acquire() throws InterruptedException {
         // TODO - you fill in here.
-    	final ReentrantLock l = this.lock;
+    	final ReentrantLock l = mLock;
     	
     	l.lockInterruptibly();
     	try {
-    		while (this.count <= 0) {
-    			notLocked.await();
+    		while (mAvailablePermits <= 0) {
+    			mCond.await();
     		}
-    		this.count--;
+    		mAvailablePermits--;
     	}
     	finally {
     		l.unlock();
@@ -75,14 +75,14 @@ public class SimpleSemaphore {
      */
     public void acquireUninterruptibly() {
         // TODO - you fill in here.
-    	final ReentrantLock l = this.lock;
+    	final ReentrantLock l = mLock;
     	
     	l.lock();
     	try {
-    		while (this.count <= 0) {
-    		 	notLocked.awaitUninterruptibly();
+    		while (mAvailablePermits <= 0) {
+    		 	mCond.awaitUninterruptibly();
     		}
-    		this.count--;
+    		this.mAvailablePermits--;
     	}
     	finally {
     		l.unlock();
@@ -95,13 +95,13 @@ public class SimpleSemaphore {
      */
     public void release() {
         // TODO - you fill in here.
-    	final ReentrantLock l = this.lock;
+    	final ReentrantLock l = mLock;
     	
     	l.lock();
     	try {
-    		this.count++;
-    		if (this.count > 0) {
-    			this.notLocked.signal();
+    		mAvailablePermits++;
+    		if (mAvailablePermits > 0) {
+    			mCond.signal();
     		}
     	}
     	finally {
@@ -116,6 +116,6 @@ public class SimpleSemaphore {
     public int availablePermits() {
         // TODO - you fill in here by changing null to the appropriate
         // return value.
-        return count;
+        return mAvailablePermits;
     }
 }
