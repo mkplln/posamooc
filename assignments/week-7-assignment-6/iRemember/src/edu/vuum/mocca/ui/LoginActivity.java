@@ -26,6 +26,7 @@ public class LoginActivity extends StoryActivityBase{
 	EditText mPassword;
 	
 	// Make sure we use maximum security to store login credentials
+	// with security settings set to private (does not write to external storage)
 	static final int MAX_SECURITY = StorageUtilities.SECURITY_PRIVATE;
 	
 	
